@@ -1,0 +1,12 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://192.168.20.197:8761/eureka/
+server:
+  port: 8764
+spring:
+  redis:
+    host: localhost
+    port: 6379
+  application:
+    name: service-redis-lock
