@@ -1,14 +1,13 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.User;
-import com.example.demo.service.ServiceHi;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 /**
  * @Author : HARRY
@@ -16,21 +15,30 @@ import java.time.format.DateTimeFormatter;
  * @Date : created in 2025/9/9 17:02
  */
 @RestController
+@RefreshScope
 public class TestController {
-
-    @Autowired
-    private ServiceHi serviceHi;
 
     @Value("${server.port}")
     String port;
 
-    @RequestMapping("/hello")
+    @Value("${pattern.dateformat}")
+    private String dateformat;
+
+    @GetMapping("now")
+    public String now(){
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateformat));
+    }
+
+    @RequestMapping("/hi")
     public String home(@RequestParam String name) {
-        return "hello "+name+",i am from port:" +port;
+        return "hi "+name+",i am from port:" +port;
     }
 
     @GetMapping("/user/{id}")
     public User getUserById(@PathVariable String id) {
-        return serviceHi.findById(id);
+        User user = new User();
+        user.setId(id);
+        user.setName(port + "_" + UUID.randomUUID().toString());
+        return user;
     }
 }

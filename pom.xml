@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
-    <artifactId>springCloudLearn</artifactId>
+    <artifactId>springcloud_demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
@@ -15,7 +15,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
-    <name>springCloudLearn</name>
+    <name>springcloud_demo</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -27,8 +27,8 @@
     </properties>
 
     <modules>
-        <module>eureka_client</module>
-        <module>eureka_gateway</module>
+        <module>service_hi</module>
+        <module>service_gateway</module>
         <module>service_hello</module>
     </modules>
 
