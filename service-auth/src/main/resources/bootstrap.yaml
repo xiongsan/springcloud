@@ -1,6 +1,6 @@
 spring:
   application:
-    name: service-hi # 服务名称
+    name: service-auth # 服务名称
   profiles:
     active: dev #开发环境，这里是dev
   cloud:

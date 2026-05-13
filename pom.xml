@@ -30,6 +30,7 @@
         <module>service_hi</module>
         <module>service_gateway</module>
         <module>service_hello</module>
+        <module>service-auth</module>
     </modules>
 
     <dependencyManagement>

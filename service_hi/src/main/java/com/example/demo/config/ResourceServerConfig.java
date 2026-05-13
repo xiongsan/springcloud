@@ -1,6 +1,7 @@
 package com.example.demo.config;
 
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,6 +26,9 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     private String signingKey = "cloud123cloud123cloud123cloud123";
 
+    @Value("${spring.application.name}")
+    private String applicationName;
+
     public JwtAccessTokenConverter jwtAccessTokenConverter () {
         JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
         jwtAccessTokenConverter.setSigningKey(signingKey);
@@ -42,7 +46,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
      */
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) {
-        resources.resourceId("service_hello").tokenStore(tokenStore()).stateless(true);
+        resources.resourceId(applicationName).tokenStore(tokenStore()).stateless(true);
     }
 
     /**
@@ -58,8 +62,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)// 设置session的创建策略（根据需要创建即可）
                 .and()
                 .authorizeRequests()
-                .antMatchers("/hello/**").authenticated() // autodeliver为前缀的请求需要认证
-                .antMatchers("/user/**").authenticated() // demo为前缀的请求需要认证
+                .antMatchers("/hi/**").authenticated() // hi为前缀的请求需要认证
+                .antMatchers("/user/**").authenticated() // user为前缀的请求需要认证
                 .anyRequest().permitAll(); //  其他请求不认证
     }
 }

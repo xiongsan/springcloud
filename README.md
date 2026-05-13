@@ -21,6 +21,9 @@ hi服务
 http://localhost:8760/service_gateway/service-hi/hi?name=zhangsan
 多次点击，轮询到各个节点
 
+访问service-hello服务再通过feign调用service-hi服务
+http://localhost:8758/service_gateway/service-hello/user/zhagnsan?token=1213
+
 同时支持配置热更新
 添加bootstrap.yaml，配置外部配置文件，本例在nacos注册中心配置管理中添加配置
 data-id命名规则为
@@ -72,4 +75,25 @@ http {
 }
 }
 
+加入认证：
 
+##服务器获取token
+GET http://localhost:8860/oauth/token?client_secret=abcdef&grant_type=password&username=wanghr&password=123456&client_id=cloud_client
+
+###验证token
+GET http://localhost:8860/oauth/check_token?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2VydmljZS1oZWxsbyIsInNlcnZpY2UtaGkiXSwiZXhwIjoxNzYwMTUyMjM3LCJ1c2VyX25hbWUiOiJ3YW5naHIiLCJqdGkiOiJiYjNmMzM0ZS02MTJmLTRmOGEtYWNjMC1hMzdiY2U0NjBjM2IiLCJjbGllbnRfaWQiOiJjbG91ZF9jbGllbnQiLCJzY29wZSI6WyJhbGwiXX0.1KTJ-_61nmOc5SX35NI9-_yh-tmRTFlyVIX238UnxwY
+
+###刷新token
+GET http://localhost:8860/oauth/token?grant_type=refresh_token&client_secret=abcdef&client_id=cloud_client&refresh_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2VydmljZS1oZWxsbyIsInNlcnZpY2UtaGkiXSwidXNlcl9uYW1lIjoid2FuZ2hyIiwic2NvcGUiOlsiYWxsIl0sImF0aSI6ImFhOWUwMTFlLTgwNGMtNGY4Mi1hN2I5LTM5MjEwYTVkMmUwZiIsImV4cCI6MTc2MDIzODc5OSwianRpIjoiNTVkMWUyNzYtNGIzZi00OWJhLThkZGMtYWFmYmMzN2FmYmY5IiwiY2xpZW50X2lkIjoiY2xvdWRfY2xpZW50In0.pgbPfVIbsPf1n8nGPlmN9Iw8q7mu5C202IWoX32_guQ
+
+##通过网关调用hello服务
+GET http://localhost:8758/service_gateway/service-hello/hello?name=zhangsan
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2VydmljZS1oZWxsbyIsInNlcnZpY2UtaGkiXSwiZXhwIjoxNzYwNjA4OTkzLCJ1c2VyX25hbWUiOiJ3YW5naHIiLCJqdGkiOiIzN2Q3NGU2Ny1mM2FjLTQyM2UtOGMzZC1hYzZhMTllZWYyZWIiLCJjbGllbnRfaWQiOiJjbG91ZF9jbGllbnQiLCJzY29wZSI6WyJhbGwiXX0.Lg1SDJWoriDmWD8ZSP9ZjI70KPLzrMlSy244DV5LZjI
+###
+##通过网关调用hello服务，hello feign调用hi服务,服务之间使用 拦截器传递 Authorization 请求头
+GET http://localhost:8758/service_gateway/service-hello/user/zhangsan
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2VydmljZS1oZWxsbyIsInNlcnZpY2UtaGkiXSwiZXhwIjoxNzYwNjA4OTkzLCJ1c2VyX25hbWUiOiJ3YW5naHIiLCJqdGkiOiIzN2Q3NGU2Ny1mM2FjLTQyM2UtOGMzZC1hYzZhMTllZWYyZWIiLCJjbGllbnRfaWQiOiJjbG91ZF9jbGllbnQiLCJzY29wZSI6WyJhbGwiXX0.Lg1SDJWoriDmWD8ZSP9ZjI70KPLzrMlSy244DV5LZjI
+###
+
+##通过网关获取token
+GET http://localhost:8758/service_gateway/service-auth/oauth/token?client_secret=abcdef&grant_type=password&username=wanghr&password=123456&client_id=cloud_client

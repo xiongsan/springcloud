@@ -1,5 +1,10 @@
 package com.example.demo.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
@@ -19,15 +24,17 @@ import java.io.Serializable;
  * </p>
  * <p> Copyright : 江苏飞博软件股份有限公司 </p>
  */
-public class User implements Serializable{
+@Entity
+@Table(name="SYS_USER")
+public class SysUser implements Serializable{
 
     private static final long serialVersionUID = 6450116187663675910L;
 
+    @Id
+    @GenericGenerator(name="generator",strategy = "native")
     private String id;
 
-    private String loginName;
-
-    private String username;
+    private String userName;
 
     private String password;
 
@@ -37,7 +44,7 @@ public class User implements Serializable{
 
     private String salt;
 
-    public User(){
+    public SysUser(){
 
     }
     public String getId() {
@@ -52,14 +59,6 @@ public class User implements Serializable{
         return serialVersionUID;
     }
 
-    public String getLoginName() {
-        return loginName;
-    }
-
-    public void setLoginName(String loginName) {
-        this.loginName = loginName;
-    }
-
     public int getLocked() {
         return locked;
     }
@@ -68,12 +67,12 @@ public class User implements Serializable{
         this.locked = locked;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPassword() {
@@ -98,10 +97,6 @@ public class User implements Serializable{
 
     public void setSalt(String salt) {
         this.salt = salt;
-    }
-
-    public String getCredentialsSalt(){
-        return loginName+salt;
     }
 
 }

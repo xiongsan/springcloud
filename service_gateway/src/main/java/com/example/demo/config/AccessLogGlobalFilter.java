@@ -22,7 +22,7 @@ import java.util.Map;
 
 /**
  * @Author : HARRY
- * @Description :
+ * @Description : 授权认证由 service-auth服务专门负责，此处可以过滤其他东西
  * @Date : created in 2025/9/10 17:23
  */
 @Component
@@ -46,7 +46,8 @@ public class AccessLogGlobalFilter implements GlobalFilter {
         }
         ServerHttpResponse response = exchange.getResponse();
         //如果token为空，直接返回401，未授权
-        if (StringUtils.isEmpty(token)) {
+        //StringUtils.isEmpty(token)
+        if (false) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             //处理完成，直接拦截，不再进行下去
             log.error("请求路径:{},响应码:{}", path, HttpStatus.UNAUTHORIZED);

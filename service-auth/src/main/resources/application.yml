@@ -1,2 +1,21 @@
 server:
-  port: 8761
+  port: 8860
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:~/dbfile;AUTO_SERVER=TRUE;DB_CLOSE_DELAY=1
+    username: sa
+    password: 123456
+    platform: h2
+    type: com.alibaba.druid.pool.DruidDataSource
+  h2:
+    console:
+      path: /h2-console
+      settings.web-allow-others: true
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: h2
+    show-sql: false
+    database-platform: org.hibernate.dialect.H2Dialect
