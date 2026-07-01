@@ -97,3 +97,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2VydmljZ
 
 ##通过网关获取token
 GET http://localhost:8758/service_gateway/service-auth/oauth/token?client_secret=abcdef&grant_type=password&username=wanghr&password=123456&client_id=cloud_client
+
+##网关做了nginx负载均衡后的访问路劲，此时我开启了三个网关服务.端口号分别为8758，8759，5760。
+GET http://localhost/service-auth/oauth/token?client_secret=abcdef&grant_type=password&username=wanghr&password=123456&client_id=cloud_client
+
+##nginx->gateway->auth服务检测token合法性
+GET http://localhost/service-auth/oauth/check_token?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2VydmljZS1oZWxsbyIsInNlcnZpY2UtaGkiXSwidXNlcl9uYW1lIjoid2FuZ2hyIiwic2NvcGUiOlsiYWxsIl0sInJvbGVzIjpbXSwib3JnYW5pemF0aW9uIjoi5p-Q57uE57uHIiwiZXhwIjoxNzgyMjkyODYzLCJ1c2VySWQiOiLnlKjmiLdJRCIsImp0aSI6ImUzZjFiNDJjLTk1ZTctNDE1Ny04MGIwLWRlNjRjYThmYThhMSIsImNsaWVudF9pZCI6ImNsb3VkX2NsaWVudCJ9.uwanAYDpuNUpQe2QZrQJaKj5gceawBuIJ4uvLr7_ad4
+###

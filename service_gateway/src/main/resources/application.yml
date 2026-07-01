@@ -1,5 +1,5 @@
 server:
-  port: 8758
+  port: 8760
   servlet:
     context-path: /${spring.application.name}
 spring:

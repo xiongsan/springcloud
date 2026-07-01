@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.jwt.crypto.sign.MacSigner;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -13,11 +14,13 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 import javax.sql.DataSource;
+import java.util.Arrays;
 
 /**
  * @Author : HARRY
@@ -30,6 +33,9 @@ public class OauthServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Autowired
     public AuthenticationManager authenticationManager;
+
+    @Autowired
+    private CustomTokenEnhancer tokenEnhancer;
 
     @Autowired
     private DataSource dataSource;
@@ -81,20 +87,6 @@ public class OauthServerConfig extends AuthorizationServerConfigurerAdapter {
     }
 
 
-    public AuthorizationServerTokenServices authorizationServerTokenServices() {
-        // 使用默认实现
-        DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
-        defaultTokenServices.setSupportRefreshToken(true); // 是否开启令牌刷新
-        defaultTokenServices.setTokenStore(tokenStore());
-        // 针对jwt令牌的添加
-        defaultTokenServices.setTokenEnhancer(jwtAccessTokenConverter());
-        // 设置令牌有效时间（一般设置为2个小时）
-        defaultTokenServices.setAccessTokenValiditySeconds(2*60*60); // access_token就是我们请求资源需要携带的令牌
-        // 设置刷新令牌的有效时间
-        defaultTokenServices.setRefreshTokenValiditySeconds(60*60*24); // 24小时
-        return defaultTokenServices;
-    }
-
     /**
      * 认证服务器是玩转token的，那么这里配置token令牌管理相关（token此时就是一个字符串，当下的token需要在服务器端存储，
      * 那么存储在哪里呢？都是在这里配置）
@@ -104,8 +96,11 @@ public class OauthServerConfig extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         super.configure(endpoints);
-        endpoints.tokenStore(tokenStore())
-                .tokenServices(authorizationServerTokenServices())
+        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+        tokenEnhancerChain.setTokenEnhancers(
+                Arrays.asList(tokenEnhancer, jwtAccessTokenConverter ()));
+        endpoints.tokenEnhancer(tokenEnhancerChain)
+                .tokenStore(tokenStore())
                 .authenticationManager(authenticationManager)
                 .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
     }
